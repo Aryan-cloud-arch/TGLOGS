@@ -1063,7 +1063,7 @@ class ConfigManager:
         Author: @MaiHuAryan
         """
         if not os.path.exists(self.config_file):
-            self._create_default_config()
+            return {}
         
         try:
             with open(self.config_file, 'r') as f:
@@ -1073,76 +1073,81 @@ class ConfigManager:
             console.print(f"[red]Error parsing config: {e}[/red]")
             return {}
     
-    def _create_default_config(self) -> None:
-        """
-        Create default configuration file
-        Author: @MaiHuAryan | t.me/MaiHuAryan
-        """
-        default_config = {
-            'api_id': 'YOUR_API_ID',
-            'api_hash': 'YOUR_API_HASH',
-            'encryption_key': '',
-            # Created by @MaiHuAryan | t.me/MaiHuAryan
-        }
-        
-        header = """# ═══════════════════════════════════════════════════════════════════
-# Telegram Account Manager - Configuration
+    def save_config(self) -> None:
+        """Save current config to file"""
+        header = """# Telegram Account Manager Configuration
 # Created by: @MaiHuAryan | t.me/MaiHuAryan
-# ═══════════════════════════════════════════════════════════════════
-#
-# Get your API credentials from: https://my.telegram.org/apps
-#
-# Support: t.me/MaiHuAryan
-# ═══════════════════════════════════════════════════════════════════
 
 """
-        
         with open(self.config_file, 'w') as f:
             f.write(header)
-            yaml.dump(default_config, f, default_flow_style=False)
-        
-        console.print(f"[yellow]📄 Created {self.config_file}[/yellow]")
-        console.print("[yellow]   Please add your API credentials![/yellow]")
-        console.print(f"[dim]   Get them from: https://my.telegram.org/apps[/dim]")
-        console.print(f"[dim]   Support: t.me/MaiHuAryan[/dim]")
+            yaml.dump(self.config, f, default_flow_style=False)
     
     def get_api_credentials(self) -> Tuple[int, str]:
         """
-        Get and validate API credentials
+        Get API credentials - asks user if not configured
         Author: @MaiHuAryan | t.me/MaiHuAryan
         """
         api_id = self.config.get('api_id')
         api_hash = self.config.get('api_hash')
         
-        # Check if credentials are default/empty
-        if api_id in ('YOUR_API_ID', None, ''):
-            console.print("\n[red]╔══════════════════════════════════════════════════════════════╗[/red]")
-            console.print("[red]║  ❌ API_ID not configured!                                   ║[/red]")
-            console.print("[red]╠══════════════════════════════════════════════════════════════╣[/red]")
-            console.print("[red]║  Please edit config.yaml and add your API credentials       ║[/red]")
-            console.print("[red]║  Get them from: https://my.telegram.org/apps                ║[/red]")
-            console.print("[red]║                                                              ║[/red]")
-            console.print("[red]║  Support: t.me/MaiHuAryan                                   ║[/red]")
-            console.print("[red]╚══════════════════════════════════════════════════════════════╝[/red]")
-            sys.exit(1)
-        
-        if api_hash in ('YOUR_API_HASH', None, ''):
-            console.print("\n[red]╔══════════════════════════════════════════════════════════════╗[/red]")
-            console.print("[red]║  ❌ API_HASH not configured!                                 ║[/red]")
-            console.print("[red]╠══════════════════════════════════════════════════════════════╣[/red]")
-            console.print("[red]║  Please edit config.yaml and add your API credentials       ║[/red]")
-            console.print("[red]║  Get them from: https://my.telegram.org/apps                ║[/red]")
-            console.print("[red]║                                                              ║[/red]")
-            console.print("[red]║  Support: t.me/MaiHuAryan                                   ║[/red]")
-            console.print("[red]╚══════════════════════════════════════════════════════════════╝[/red]")
-            sys.exit(1)
+        # Check if credentials exist and valid
+        if not api_id or not api_hash or api_id == 'YOUR_API_ID' or api_hash == 'YOUR_API_HASH':
+            # Ask user for credentials
+            console.print("\n[bold cyan]╔══════════════════════════════════════════════════════════════╗[/bold cyan]")
+            console.print("[bold cyan]║              🔐 API CREDENTIALS SETUP                        ║[/bold cyan]")
+            console.print("[bold cyan]╠══════════════════════════════════════════════════════════════╣[/bold cyan]")
+            console.print("[bold cyan]║                                                              ║[/bold cyan]")
+            console.print("[bold cyan]║  First time setup! Let's configure your API credentials.    ║[/bold cyan]")
+            console.print("[bold cyan]║                                                              ║[/bold cyan]")
+            console.print("[bold cyan]║  Get them from: https://my.telegram.org/apps                ║[/bold cyan]")
+            console.print("[bold cyan]║                                                              ║[/bold cyan]")
+            console.print("[bold cyan]║  Steps:                                                     ║[/bold cyan]")
+            console.print("[bold cyan]║  1. Open link above in browser                              ║[/bold cyan]")
+            console.print("[bold cyan]║  2. Login with your phone number                            ║[/bold cyan]")
+            console.print("[bold cyan]║  3. Click 'API Development Tools'                           ║[/bold cyan]")
+            console.print("[bold cyan]║  4. Create new app (any name)                               ║[/bold cyan]")
+            console.print("[bold cyan]║  5. Copy api_id and api_hash                                ║[/bold cyan]")
+            console.print("[bold cyan]║                                                              ║[/bold cyan]")
+            console.print("[bold cyan]║  [dim]@MaiHuAryan | t.me/MaiHuAryan[/dim]                            ║[/bold cyan]")
+            console.print("[bold cyan]╚══════════════════════════════════════════════════════════════╝[/bold cyan]")
+            
+            console.print("")
+            
+            # Get API ID
+            while True:
+                api_id_input = Prompt.ask("[cyan]📱 Enter your API ID[/cyan]")
+                try:
+                    api_id = int(api_id_input.strip())
+                    break
+                except ValueError:
+                    console.print("[red]❌ API ID must be a number! Try again.[/red]")
+            
+            # Get API Hash
+            api_hash = Prompt.ask("[cyan]🔑 Enter your API Hash[/cyan]")
+            api_hash = api_hash.strip()
+            
+            if not api_hash:
+                console.print("[red]❌ API Hash cannot be empty![/red]")
+                sys.exit(1)
+            
+            # Save to config
+            self.config['api_id'] = api_id
+            self.config['api_hash'] = api_hash
+            self.config['encryption_key'] = ''
+            self.save_config()
+            
+            console.print("\n[green]✅ API credentials saved![/green]")
+            console.print(f"[dim]Saved to: {self.config_file}[/dim]")
+            console.print("")
         
         try:
             api_id = int(api_id)
         except (ValueError, TypeError):
-            console.print("[red]❌ API_ID must be a number![/red]")
-            console.print(f"[dim]Support: t.me/MaiHuAryan[/dim]")
-            sys.exit(1)
+            console.print("[red]❌ Invalid API_ID![/red]")
+            # Delete config and retry
+            self.config = {}
+            return self.get_api_credentials()
         
         return api_id, str(api_hash)
     
@@ -1150,10 +1155,11 @@ class ConfigManager:
         """Get encryption key from config"""
         return self.config.get('encryption_key', '')
     
-    def save_config(self) -> None:
-        """Save current config to file"""
-        with open(self.config_file, 'w') as f:
-            yaml.dump(self.config, f, default_flow_style=False)
+    def update_api_credentials(self, api_id: int, api_hash: str) -> None:
+        """Update API credentials"""
+        self.config['api_id'] = api_id
+        self.config['api_hash'] = api_hash
+        self.save_config()
 
 
 # ══════════════════════════════════════════════════════════════════════════════
