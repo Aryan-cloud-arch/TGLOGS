@@ -2293,7 +2293,7 @@ async def feature_refresh_sessions(db: DatabaseManager, tg: TelegramManager) -> 
         
         elif choice == "2":
         # Select specific accounts
-        console.print("\n[bold]Select accounts (comma-separated IDs):[/bold]\n")
+        console.print("\n[bod]Select accounts (comma-separated IDs):[/bold]\n")
         for acc in accounts:
             status_icon = "✅" if acc['status'] == 'ACTIVE' else "❌"
             console.print(f"[{acc['id']}] {status_icon} {acc['label']} ({mask_phone(acc['phone'])})")
