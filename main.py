@@ -2327,27 +2327,6 @@ async def feature_refresh_sessions(db: DatabaseManager, tg: TelegramManager) -> 
                     accounts_to_refresh.append(acc)
             except (ValueError, TypeError):
                 accounts_to_refresh.append(acc)
-            except ValueError:
-                continue
-                
-    elif choice == "3":
-        # Failed accounts only
-        accounts_to_refresh = db.get_failed_accounts()
-        
-    elif choice == "4":
-        # Old sessions (>30 days)
-        for acc in accounts:
-            last_refresh = acc.get('last_refreshed')
-            if not last_refresh:
-                accounts_to_refresh.append(acc)
-                continue
-            
-            try:
-                last_dt = datetime.strptime(str(last_refresh), "%Y-%m-%d %H:%M:%S")
-                if (datetime.now() - last_dt).days > 30:
-                    accounts_to_refresh.append(acc)
-            except (ValueError, TypeError):
-                accounts_to_refresh.append(acc)
     
     if not accounts_to_refresh:
         console.print("[yellow]No accounts match the criteria![/yellow]")
