@@ -1,0 +1,7 @@
+# Telegram Account Manager Configuration
+# Created by: @MaiHuAryan | t.me/MaiHuAryan
+# Get API credentials from: https://my.telegram.org/apps
+
+api_id: YOUR_API_ID
+api_hash: YOUR_API_HASH
+encryption_key: ""
