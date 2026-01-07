@@ -2291,16 +2291,7 @@ async def feature_refresh_sessions(db: DatabaseManager, tg: TelegramManager) -> 
         # All accounts
         accounts_to_refresh = accounts
         
-    elif choice == "2":
-        # Select specific
-        console.print("\n[bold]Available 
-# ══════════════════════════════════════════════════════════════════════════════
-# CONTINUATION OF tgm.py
-# Author: @MaiHuAryan | t.me/MaiHuAryan
-# ══════════════════════════════════════════════════════════════════════════════
-
-# ... (Previous code continues here)
-
+        elif choice == "2":
         # Select specific accounts
         console.print("\n[bold]Select accounts (comma-separated IDs):[/bold]\n")
         for acc in accounts:
