@@ -1,0 +1,29 @@
+# Telegram Account Manager - @MaiHuAryan | t.me/MaiHuAryan
+
+# Sensitive Files
+config.yaml
+sessions.db
+*.session
+*.db
+*.enc
+backups/*.enc
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.egg-info/
+venv/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
